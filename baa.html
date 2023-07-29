@@ -47,6 +47,22 @@
 
     "></script>
   <script>
+        window.addEventListener("DOMContentLoaded", ()=>{
+          axios
+            .get("https://crudcrud.com/api/cd2d78c1ff7741158d3407bee4bffef9/appointmentData")
+            .then((res)=>{
+              console.log(res)
+              for(var i=0; i<res.data.length; i++) showUsersOnScreen(res.data[i]);  
+            })
+            .catch((err)=>{console.log(err)})
+
+
+        })
+
+
+
+
+
     function saveToLocalStorage(event){
       event.preventDefault();
       const name = event.target.name.value;
