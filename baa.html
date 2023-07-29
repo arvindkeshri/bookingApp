@@ -1,96 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
-    crossorigin="anonymous"
-  />
-  <script
-    defer
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"
-  ></script>
-  
-</head>
-<body>
-  <style></style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <style></style>
     <div class="container">
       <h1 text-align="center">_____________________________</h1>
-      <h1 text-align="center">Booking Appointment App</h1><br>
+      <h1 text-align="center">Booking Appointment App</h1>
+      <br />
       <div class="row">
         <div class="col-6">
-  <form onsubmit="saveToLocalStorage(event)" id="form">
-    <label>Name</label>
-    <input type="text" name="username" id="name" required ><br><br>
-    <label>Email</label>
-    <input type="text" name="email" id="email" required><br><br>
-    <label>Mob.</label>
-    <input type="number" name="phone" id="pnumber" required><br><br>
-    <input type="submit" class="btn btn-primary btn-lg" value="Submit">
-  </form>
-  <br /><br />
-          
+          <form onsubmit="saveToLocalStorage(event)" id="form">
+            <label>Name</label>
+            <input type="text" name="username" id="name" required /><br /><br />
+            <label>Email</label>
+            <input type="text" name="email" id="email" required /><br /><br />
+            <label>Mob.</label>
+            <input
+              type="number"
+              name="phone"
+              id="pnumber"
+              required
+            /><br /><br />
+            <input
+              type="submit"
+              class="btn btn-primary btn-lg"
+              value="Submit"
+            />
+          </form>
+          <br /><br />
+
           <ul id="list"></ul>
         </div>
       </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        axios
+          .get(
+            "https://crudcrud.com/api/cd2d78c1ff7741158d3407bee4bffef9/appointmentData"
+          )
+          .then((res) => {
+            console.log(res);
+            for (var i = 0; i < res.data.length; i++)
+              showUsersOnScreen(res.data[i]);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
 
-
-
-    "></script>
-  <script>
-    function saveToLocalStorage(event){
-      event.preventDefault();
-      const name = event.target.name.value;
-      const email = event.target.email.value;
-      const phone = event.target.pnumber.value;
-      const uid = JSON.stringify(name)+JSON.stringify(phone); 
-      const obj = { name:name, email:email, phone:phone};
-      //localStorage.setItem(uid, JSON.stringify(obj));
-      axios
-        .post("https://crudcrud.com/api/cd2d78c1ff7741158d3407bee4bffef9/appointmentData", obj)
-        .then((response)=>{showUsersOnScreen(response.data)})
-        .catch((err)=> {
-          document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong...</h4>";
-          console.log(err)})
-    }
-
-    function showUsersOnScreen(obj){
-      const parentElem = document.getElementById("list")
-      const childElem = document.createElement("li");
-      childElem.textContent = obj.name+'---'+obj.email+'---'+obj.phone+' -----';
-      
-      const deleteButton = document.createElement('input');
-          deleteButton.type = "button";
-          deleteButton.value = 'Delete';
-          deleteButton.onclick = () => {
-            localStorage.removeItem(obj.id);
-            parentElem.removeChild(childElem);
+      function saveToLocalStorage(event) {
+        event.preventDefault();
+        const name = event.target.name.value;
+        const email = event.target.email.value;
+        const phone = event.target.pnumber.value;
+        const uid = JSON.stringify(name) + JSON.stringify(phone);
+        const obj = { name: name, email: email, phone: phone };
+        localStorage.setItem(uid, JSON.stringify(obj));
+        axios
+          .post(
+            "https://crudcrud.com/api/cd2d78c1ff7741158d3407bee4bffef9/appointmentData",
+            obj
+          )
+          .then((response) => {
+            showUsersOnScreen(response.data);
+          })
+          .catch((err) => {
+            document.body.innerHTML =
+              document.body.innerHTML + "<h4> Something went wrong...</h4>";
+            console.log(err);
+          });
       }
-      const editButton = document.createElement("input");
-           editButton.type = "button";
-           editButton.value = "Edit";
-           editButton.onclick = () => {
-             localStorage.removeItem(obj.name);
-             parentElem.removeChild(childElem);
-             document.getElementById('name').value = obj.name;
-             document.getElementById('email').value = obj.email;
-             document.getElementById('pnumber').value = obj.phone;
-          }
 
-      childElem.appendChild(editButton);
-      childElem.appendChild(deleteButton);
-      parentElem.appendChild(childElem);
-      document.getElementById("form").reset();
-    }
-  </script>
-</body>
+
+      function showUsersOnScreen(obj) {
+        const parentElem = document.getElementById("list");
+        const childElem = document.createElement("li");
+        childElem.textContent =
+          obj.name + "---" + obj.email + "---" + obj.phone + " -----";
+          console.log(obj);
+        const deleteButton = document.createElement("input");
+        deleteButton.type = "button";
+        deleteButton.value = "Delete";
+        deleteButton.onclick = () => {
+          localStorage.removeItem(obj.id);
+          parentElem.removeChild(childElem);
+          axios
+            .delete(
+              `https://crudcrud.com/api/cd2d78c1ff7741158d3407bee4bffef9/appointmentData/${obj._id}`
+              
+            )
+            .then((response) => {   
+            })
+            .catch((err) => {
+              document.body.innerHTML =
+                document.body.innerHTML + "<h4> Something went wrong...</h4>";
+              console.log(err);
+            });
+        };
+
+        const editButton = document.createElement("input");
+        editButton.type = "button";
+        editButton.value = "Edit";
+        editButton.onclick = () => {
+          //localStorage.removeItem(obj.name);
+          parentElem.removeChild(childElem);
+
+          
+          document.getElementById("name").value = obj.name;
+          document.getElementById("email").value = obj.email;
+          document.getElementById("pnumber").value = obj.phone;
+        };
+
+        childElem.appendChild(editButton);
+        childElem.appendChild(deleteButton);
+        parentElem.appendChild(childElem);
+        document.getElementById("form").reset();
+      }
+    </script>
+  </body>
 </html>
